@@ -45,6 +45,12 @@ public class GlobalExceptionHandler {
             return errorDetail;
         }
 
+        if (exception instanceof EmailAlreadyInUseException) {
+            errorDetail = ProblemDetail.forStatusAndDetail(HttpStatusCode.valueOf(409), exception.getMessage());
+            errorDetail.setProperty("description", "The email is already in use");
+            return errorDetail;
+        }
+
         if (exception instanceof SignatureException || exception instanceof MalformedJwtException) {
             errorDetail = ProblemDetail.forStatusAndDetail(HttpStatusCode.valueOf(401), exception.getMessage());
             errorDetail.setProperty("description", "The JWT signature or structure is invalid");
@@ -79,6 +85,8 @@ public class GlobalExceptionHandler {
             errorDetail.setProperty("description", "Invalid arguments");
             return errorDetail;
         }
+
+
 
         if (errorDetail == null) {
             errorDetail = ProblemDetail.forStatusAndDetail(HttpStatusCode.valueOf(500), exception.getMessage());
