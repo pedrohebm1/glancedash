@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 
 import com.pedrohenrique.backend.dto.auth.LoginUserDto;
 import com.pedrohenrique.backend.dto.auth.RegisterUserDto;
+import com.pedrohenrique.backend.exceptions.EmailAlreadyInUseException;
 import com.pedrohenrique.backend.model.user.User;
 import com.pedrohenrique.backend.model.user.role.Role;
 import com.pedrohenrique.backend.model.user.role.RoleName;
@@ -46,8 +47,8 @@ public class AuthenticationService {
                 String username = jwtService.extractUsername(token);
 
                 User user = userRepository.findByEmail(username);
-                
-                if (user == null) throw new UsernameNotFoundException("User not found"); 
+
+                if (user == null) throw new UsernameNotFoundException("User not found");
 
                 return user;
         }
@@ -55,6 +56,9 @@ public class AuthenticationService {
         public User signup(RegisterUserDto input) {
                 Role userRole = roleRepository.findByName(RoleName.ROLE_USER)
                                 .orElseThrow(() -> new IllegalStateException("ROLE_USER não encontrada"));
+
+                if (userRepository.findByEmail(input.email()) != null) throw new EmailAlreadyInUseException();
+
                 User user = User.builder()
                                 .username(input.username())
                                 .email(input.email())
@@ -72,8 +76,8 @@ public class AuthenticationService {
                                                 input.password()));
 
                 User user = userRepository.findByEmail(input.email().toString());
-                
-                if (user == null) throw new UsernameNotFoundException("User not found"); 
+
+                if (user == null) throw new UsernameNotFoundException("User not found");
                 return user;
         }
 }

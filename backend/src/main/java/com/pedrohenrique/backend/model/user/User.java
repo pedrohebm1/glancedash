@@ -23,7 +23,7 @@ import java.util.stream.Collectors;
 @Entity
 @Builder
 @AllArgsConstructor
-@NoArgsConstructor 
+@NoArgsConstructor
 @Getter
 @Setter
 public class User implements UserDetails {
@@ -58,6 +58,11 @@ public class User implements UserDetails {
     @Override
     public String getUsername() {
         return email;
+    }
+
+    @Override
+    public String getPassword() {
+        return password;
     }
 
     @Override
