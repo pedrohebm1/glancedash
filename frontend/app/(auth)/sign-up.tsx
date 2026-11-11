@@ -48,12 +48,15 @@ export default function SignUp() {
       setIsSubmitting(true);
       const credentials = { email, username, password };
       await signupRequest(credentials);
+
+      router.push('/(tabs)/home')
     } catch (error) {
-      if (axios.isAxiosError(error)) {
-        const errorMessage = error.response?.data?.message || 'Failed to signup.';
-        Alert.alert('Erro', errorMessage);
+      console.error("Signup error:", error);
+
+      if (error instanceof Error) {
+        Alert.alert("Erro", error.message);
       } else {
-        Alert.alert('Unexpected error', 'Please try again.');
+        Alert.alert("Erro inesperado", "Please try again.");
       }
     } finally {
       setIsSubmitting(false);
@@ -142,10 +145,7 @@ export default function SignUp() {
 
           <TouchableOpacity
             disabled={isButtonDisabled}
-            style={[
-              styles.button,
-              isButtonDisabled && styles.disabledButton,
-            ]}
+            style={[styles.button, isButtonDisabled && styles.disabledButton]}
             onPress={handleSignup}
           >
             <Text style={styles.buttonText}>

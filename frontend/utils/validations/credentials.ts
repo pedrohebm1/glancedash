@@ -9,9 +9,9 @@ interface signupCredentials {
     password: string
 }
 
-const emailRegex = /^[a-z0-9.]+@[a-z0-9]+\.[a-z]+\.([a-z]+)?$/i
+const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
 
-const validateUsernameAndPassword = (data: signinCredentials) => {
+const validateEmailAndPassword = (data: signinCredentials) => {
     if (data.email && data.password) {
         if (!data.email.match(emailRegex)) return false;
         if (!(data.password.trim().length >= 8 && data.password.trim().length <= 25)) return false;
@@ -21,12 +21,12 @@ const validateUsernameAndPassword = (data: signinCredentials) => {
 }
 
 export const validateSigninCredentials = (data: signinCredentials) => {
-    return validateUsernameAndPassword(data);
+    return validateEmailAndPassword(data);
 }
 
 export const validateSignupCredentials = (data: signupCredentials) => {
-    const validateUserAndPass = validateUsernameAndPassword({ email: data.email, password: data.password })
-
+    const validateUserAndPass = validateEmailAndPassword({ email: data.email, password: data.password })
+    console.log(data.email.match(emailRegex))
     if (validateUserAndPass && (data.username.trim().length >= 5 && data.username.trim().length <= 12)) {
         return true
     }
